@@ -1,0 +1,161 @@
+{
+    "version":  "2.0.0",
+    "tasks":  [
+                  {
+                      "label":  "prepare MIDI SDK",
+                      "type":  "process",
+                      "command":  "powershell",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "tools/Restore-MidiSdk.ps1"
+                               ],
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
+                      "label":  "build",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "build",
+                                   "PadToMIDI.sln"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "group":  {
+                                    "kind":  "build",
+                                    "isDefault":  true
+                                },
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "test core",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "test",
+                                   "--project",
+                                   "tests/PadToMIDI.Core.Tests/PadToMIDI.Core.Tests.csproj"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "test MIDI backend",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "test",
+                                   "--project",
+                                   "tests/PadToMIDI.Midi.Windows.Tests/PadToMIDI.Midi.Windows.Tests.csproj"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "MIDI synth monitor",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "run",
+                                   "--project",
+                                   "tools/PadToMIDI.MidiProbe",
+                                   "--",
+                                   "--synth-monitor"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "test settings",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "test",
+                                   "--project",
+                                   "tests/PadToMIDI.App.Tests/PadToMIDI.App.Tests.csproj"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "verify settings UI",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "run",
+                                   "--project",
+                                   "tools/PadToMIDI.SettingsProbe"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "verify profiles UI",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "run",
+                                   "--project",
+                                   "tools/PadToMIDI.SettingsProbe",
+                                   "--",
+                                   "--profiles-test"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "run",
+                      "type":  "process",
+                      "command":  "dotnet",
+                      "args":  [
+                                   "run",
+                                   "--project",
+                                   "src/PadToMIDI.App/PadToMIDI.App.csproj"
+                               ],
+                      "problemMatcher":  "$msCompile",
+                      "dependsOn":  "prepare MIDI SDK",
+                      "dependsOrder":  "sequence"
+                  },
+                  {
+                      "label":  "build release package",
+                      "type":  "process",
+                      "command":  "powershell",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "tools/Build-Release.ps1"
+                               ],
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
+                      "label":  "verify release package",
+                      "type":  "process",
+                      "command":  "powershell",
+                      "args":  [
+                                   "-NoProfile",
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "tools/Test-Release.ps1"
+                               ],
+                      "problemMatcher":  [
+
+                                         ]
+                  }
+              ]
+}

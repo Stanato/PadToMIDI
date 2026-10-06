@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PadToMIDI.App.ViewModels.Settings" xmlns:views="using:PadToMIDI.App.Views.Settings"
+             x:Class="PadToMIDI.App.Views.Settings.AxisExpressionEditorView" x:DataType="vm:AxisExpressionEditorViewModel">
+  <Border Classes="card" Padding="16">
+    <StackPanel Spacing="10">
+      <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" />
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+        <CheckBox Content="Enabled" IsChecked="{Binding Enabled}" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Sources}" SelectedItem="{Binding Source}" HorizontalAlignment="Stretch" />
+      </Grid>
+      <StackPanel Spacing="4" IsVisible="{Binding IsTimbre}">
+        <TextBlock Classes="muted" Text="Timbre CC number (0–119)" FontSize="12" />
+        <NumericUpDown Minimum="0" Maximum="119" Increment="1" FormatString="0" Value="{Binding ControllerNumber}" />
+      </StackPanel>
+      <views:ResponseEditorView DataContext="{Binding Response}" />
+    </StackPanel>
+  </Border>
+</UserControl>

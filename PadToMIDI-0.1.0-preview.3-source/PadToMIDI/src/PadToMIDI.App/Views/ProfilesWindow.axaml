@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PadToMIDI.App.ViewModels" xmlns:profiles="using:PadToMIDI.Core.Profiles"
+        x:Class="PadToMIDI.App.Views.ProfilesWindow" x:DataType="vm:ProfilesViewModel"
+        Title="PadToMIDI — Profiles" Width="1040" Height="740" MinWidth="920" MinHeight="620"
+        WindowStartupLocation="CenterOwner" Background="#0E1728" FontFamily="Segoe UI">
+  <Window.KeyBindings><KeyBinding Gesture="Ctrl+Shift+Escape" Command="{Binding PanicCommand}" /></Window.KeyBindings>
+  <Grid Margin="28" RowDefinitions="Auto,*,Auto" RowSpacing="20">
+    <StackPanel Spacing="6">
+      <TextBlock Classes="eyebrow" Text="PROFILES" />
+      <TextBlock Text="{Binding ActiveName, StringFormat='Active: {0}'}" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Classes="muted" Text="Apply edits in Settings, then Save here. Selecting a profile does not load it." TextWrapping="Wrap" />
+    </StackPanel>
+    <Grid Grid.Row="1" ColumnDefinitions="300,*" ColumnSpacing="20">
+      <ListBox x:Name="ProfileList" ItemsSource="{Binding Profiles}" SelectedItem="{Binding Selected}" IsEnabled="{Binding IsIdle}">
+        <ListBox.ItemTemplate><DataTemplate x:DataType="profiles:InstrumentProfile"><TextBlock Text="{Binding Name}" TextWrapping="Wrap" /></DataTemplate></ListBox.ItemTemplate>
+      </ListBox>
+      <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{Binding SelectedDetails}" TextWrapping="Wrap" />
+          <TextBlock Text="Profile name" />
+          <TextBox x:Name="ProfileName" Text="{Binding Name}" MaxLength="80" IsEnabled="{Binding IsIdle}" />
+          <WrapPanel Orientation="Horizontal" IsEnabled="{Binding IsIdle}">
+            <Button x:Name="CreateProfile" Content="Create from current" Command="{Binding CreateCommand}" Margin="0,0,8,8" />
+            <Button x:Name="LoadProfile" Content="Load selected" Command="{Binding LoadCommand}" Margin="0,0,8,8" />
+            <Button x:Name="SaveProfile" Content="Save current to selected" Command="{Binding SaveCommand}" IsEnabled="{Binding CanModify}" Margin="0,0,8,8" />
+            <Button x:Name="DuplicateProfile" Content="Duplicate stored" Command="{Binding DuplicateCommand}" Margin="0,0,8,8" />
+            <Button x:Name="RenameProfile" Content="Rename" Command="{Binding RenameCommand}" IsEnabled="{Binding CanModify}" Margin="0,0,8,8" />
+            <Button x:Name="DeleteProfile" Content="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanModify}" Margin="0,0,8,8" />
+          </WrapPanel>
+          <StackPanel IsVisible="{Binding DeletePending}" Spacing="8">
+            <TextBlock Text="Delete this stored profile? Deleting the active profile loads Default C Major." TextWrapping="Wrap" Foreground="#FFADAD" />
+            <StackPanel Orientation="Horizontal" Spacing="8" IsEnabled="{Binding IsIdle}">
+              <Button x:Name="ConfirmDeleteProfile" Content="Confirm delete" Command="{Binding ConfirmDeleteCommand}" />
+              <Button Content="Cancel" Command="{Binding CancelDeleteCommand}" />
+            </StackPanel>
+          </StackPanel>
+          <WrapPanel IsEnabled="{Binding IsIdle}">
+            <Button x:Name="ImportProfile" Content="Import JSON…" Command="{Binding ImportCommand}" Margin="0,0,8,8" />
+            <Button x:Name="ExportProfile" Content="Export stored JSON…" Command="{Binding ExportCommand}" Margin="0,0,8,8" />
+            <Button Content="Refresh library" Command="{Binding RefreshCommand}" Margin="0,0,8,8" />
+            <Button x:Name="ResetProfile" Content="Load Default C Major" Command="{Binding ResetCommand}" Margin="0,0,8,8" />
+          </WrapPanel>
+          <TextBlock Classes="muted" Text="Default C Major is read-only. Create or Duplicate makes an editable profile. Import creates a new copy. Export uses the stored selection." TextWrapping="Wrap" />
+          <TextBlock Classes="muted" Text="Controller preferences match unique names. Missing or ambiguous devices require manual selection. MIDI output changes disconnect the previous route; choose Connect to enable the selected output." TextWrapping="Wrap" />
+          <TextBlock IsVisible="{Binding HasWarnings}" Classes="error" Text="{Binding Warnings}" TextWrapping="Wrap" />
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="16">
+      <TextBlock x:Name="ProfileStatus" Text="{Binding Status}" Classes.error="{Binding HasError}" TextWrapping="Wrap" VerticalAlignment="Center" />
+      <Button Grid.Column="1" x:Name="ProfilePanic" Content="Panic" Command="{Binding PanicCommand}" />
+    </Grid>
+  </Grid>
+</Window>

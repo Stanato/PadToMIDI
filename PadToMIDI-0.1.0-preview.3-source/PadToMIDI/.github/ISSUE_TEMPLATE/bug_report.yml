@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a problem with PadToMIDI.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include what you expected and the steps needed to reproduce it.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PadToMIDI version
+      placeholder: 0.1.0-preview.3
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      description: Run winver to check.
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Controller and MIDI setup
+      description: Controller model, USB/Bluetooth, MIDI Services version, endpoint, DAW/synth, and relevant profile settings.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Include relevant errors or screenshots. Remove personal paths, device identifiers, and secrets before posting.

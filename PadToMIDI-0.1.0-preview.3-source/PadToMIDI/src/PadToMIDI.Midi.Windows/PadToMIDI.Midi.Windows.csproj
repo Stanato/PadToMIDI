@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <WindowsSDKPackageVersion>10.0.26100.57</WindowsSDKPackageVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- C#/WinRT consumes metadata from the .NET Windows reference pack; no machine SDK required. -->
+    <CsWinRTWindowsMetadata>"$(NuGetPackageRoot)/microsoft.windows.sdk.net.ref/$(WindowsSDKPackageVersion)/winmd"</CsWinRTWindowsMetadata>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../PadToMIDI.Core/PadToMIDI.Core.csproj" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" PrivateAssets="all" />
+    <PackageReference Include="Windows.Devices.Midi2" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(PkgWindows_Devices_Midi2)/runtimes/win-x64/native/Windows.Devices.Midi2.pri" Link="Windows.Devices.Midi2.pri" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="$(PkgWindows_Devices_Midi2)/runtimes/win-x64/native/Windows.Devices.Midi2.dll" Link="Windows.Devices.Midi2.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

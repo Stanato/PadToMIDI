@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:services="using:PadToMIDI.App.Services" x:Class="PadToMIDI.App.Views.HelpWindow"
+        xmlns:vm="using:PadToMIDI.App.ViewModels" x:DataType="vm:MainWindowViewModel"
+        Title="PadToMIDI — Help" Width="700" Height="660" MinWidth="600" MinHeight="500"
+        WindowStartupLocation="CenterOwner" Background="#0E1728" FontFamily="Segoe UI">
+  <Window.KeyBindings><KeyBinding Gesture="Ctrl+Shift+Escape" Command="{Binding PanicCommand}" /></Window.KeyBindings>
+  <Grid RowDefinitions="*,Auto" Margin="28">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="18">
+      <TextBlock Classes="eyebrow" Text="PadToMIDI" />
+      <TextBlock Text="{x:Static services:AppIdentity.DisplayName}" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Text="Get playing" FontSize="19" FontWeight="SemiBold" />
+      <TextBlock Text="Connect a controller. Select a MIDI output and choose Connect. In your synth or DAW, enable its receiving MIDI input and instrument monitoring. A loopback pair sends MIDI between apps." TextWrapping="Wrap" />
+      <TextBlock Text="Default controls" FontSize="19" FontWeight="SemiBold" />
+      <TextBlock Text="D-pad Down / Up / Left / Right: scale degrees 1 / 2 / 3 / 4. Face South / North / West / East: degrees 5 / 6 / 7 / 8.&#10;&#10;Left stick Up / Down: momentary octave higher / lower. Left / Right: persistent octave lower / higher, once per excursion. Return both axes to center to rearm.&#10;&#10;Hold Left / Right Bumper for flat / sharp on new notes. Left / Right Trigger: aftertouch for the latest active D-pad / face note. Right stick X: pitch bend; Y: CC74 timbre." TextWrapping="Wrap" />
+      <TextBlock Text="Chord mode" FontSize="19" FontWeight="SemiBold" />
+      <TextBlock Text="Press Start to toggle single notes and scale triads. In C Major the eight buttons play C, Dm, Em, F, G, Am, Bdim, then C one octave higher. Held notes or chords keep playing until their original button releases. Settings → Chords selects the toggle, harmony scale or explicit shape. Pentatonic, blues and chromatic scales need an explicit harmony choice; fixed-note assignments need an explicit shape. Bumpers and octave controls transpose the whole chord; triggers express all its tones." TextWrapping="Wrap" />
+      <TextBlock Text="Keep your setup" FontSize="19" FontWeight="SemiBold" />
+      <TextBlock Text="Apply edits in Settings. In Profiles, choose Create from current or Save current to selected. The last saved or loaded profile restores on startup. MIDI output still needs Connect. Uninstall preserves saved profiles." TextWrapping="Wrap" />
+      <TextBlock Classes="muted" Text="Shortcuts: F1 Help · Ctrl+, Settings · Ctrl+Shift+P Profiles · Ctrl+Shift+Esc Panic. Shortcuts work while this app has focus." TextWrapping="Wrap" />
+      <TextBlock Text="Windows 11 25H2+ · x64 · Preview" FontSize="19" FontWeight="SemiBold" />
+      <TextBlock Classes="muted" Text="This release uses preview Windows MIDI Services APIs. Windows MIDI Services and any loopback/synth transports are separate prerequisites. Bundled dependency notices and setup instructions are in the installation folder." TextWrapping="Wrap" />
+    </StackPanel>
+  </ScrollViewer>
+  <Button x:Name="HelpPanic" Grid.Row="1" Content="Panic" Command="{Binding PanicCommand}" HorizontalAlignment="Right" Margin="0,16,0,0" />
+  </Grid>
+</Window>

@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "id": "ad29b01f-9707-4abf-a0d6-c7aaf141c001",
+  "name": "Default C Major",
+  "configuration": {
+    "root": "C",
+    "scale": {
+      "name": "Major",
+      "intervals": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11
+      ]
+    },
+    "baseOctave": 3,
+    "fixedVelocity": 100,
+    "midiChannel": 0,
+    "mappings": {
+      "FaceSouth": {
+        "type": "scaleDegree",
+        "degree": 5
+      },
+      "FaceNorth": {
+        "type": "scaleDegree",
+        "degree": 6
+      },
+      "FaceWest": {
+        "type": "scaleDegree",
+        "degree": 7
+      },
+      "FaceEast": {
+        "type": "scaleDegree",
+        "degree": 8
+      },
+      "DPadDown": {
+        "type": "scaleDegree",
+        "degree": 1
+      },
+      "DPadUp": {
+        "type": "scaleDegree",
+        "degree": 2
+      },
+      "DPadLeft": {
+        "type": "scaleDegree",
+        "degree": 3
+      },
+      "DPadRight": {
+        "type": "scaleDegree",
+        "degree": 4
+      }
+    },
+    "temporaryOctaveModifiers": {},
+    "temporarySemitoneModifiers": {
+      "LeftBumper": -1,
+      "RightBumper": 1
+    },
+    "leftStick": {
+      "xAxis": "LeftStickX",
+      "yAxis": "LeftStickY",
+      "threshold": 0.65,
+      "deadZone": 0.25,
+      "up": "MomentaryOctaveUp",
+      "down": "MomentaryOctaveDown",
+      "right": "IncreaseOctave",
+      "left": "DecreaseOctave"
+    },
+    "expression": {
+      "dPadAftertouch": {
+        "enabled": true,
+        "source": "LeftTrigger",
+        "mode": "PolyphonicPressure",
+        "minimumThreshold": 0.02,
+        "response": {
+          "deadZone": 0.05,
+          "curve": "Linear",
+          "sensitivity": 1,
+          "invert": false,
+          "smoothingMilliseconds": 0,
+          "updateRateHz": 60
+        }
+      },
+      "faceAftertouch": {
+        "enabled": true,
+        "source": "RightTrigger",
+        "mode": "PolyphonicPressure",
+        "minimumThreshold": 0.02,
+        "response": {
+          "deadZone": 0.05,
+          "curve": "Linear",
+          "sensitivity": 1,
+          "invert": false,
+          "smoothingMilliseconds": 0,
+          "updateRateHz": 60
+        }
+      },
+      "pitchBend": {
+        "enabled": true,
+        "source": "RightStickX",
+        "response": {
+          "deadZone": 0.08,
+          "curve": "Linear",
+          "sensitivity": 1,
+          "invert": false,
+          "smoothingMilliseconds": 0,
+          "updateRateHz": 60
+        }
+      },
+      "timbre": {
+        "enabled": true,
+        "source": "RightStickY",
+        "controllerNumber": 74,
+        "response": {
+          "deadZone": 0.08,
+          "curve": "Linear",
+          "sensitivity": 1,
+          "invert": true,
+          "smoothingMilliseconds": 0,
+          "updateRateHz": 60
+        }
+      }
+    },
+    "chords": {
+      "enabled": false,
+      "toggleButton": "Start",
+      "harmonyScale": null,
+      "shape": "ScaleTriad"
+    }
+  },
+  "controllerName": null,
+  "midiEndpointId": null,
+  "midiEndpointName": null
+}

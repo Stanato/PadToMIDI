@@ -1,0 +1,52 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/padtomidi-dotnet
+        with:
+          dotnet-version: '10.0.401'
+      - name: Download and verify the official MIDI SDK
+        run: ./tools/Restore-MidiSdk.ps1
+      - name: Locked restore
+        run: dotnet restore PadToMIDI.sln --locked-mode
+      - name: Release build
+        run: dotnet build PadToMIDI.sln -c Release --no-restore
+      - name: Core tests
+        run: dotnet test --project tests/PadToMIDI.Core.Tests -c Release --no-build --no-restore
+      - name: App tests
+        run: dotnet test --project tests/PadToMIDI.App.Tests -c Release --no-build --no-restore
+      - name: MIDI backend tests
+        run: dotnet test --project tests/PadToMIDI.Midi.Windows.Tests -c Release --no-build --no-restore
+      - name: Build diagnostic tools
+        run: |
+          foreach ($project in @('InputProbe','MidiProbe','SettingsProbe')) {
+            dotnet build "tools/PadToMIDI.$project" -c Release -p:RestoreLockedMode=true
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }

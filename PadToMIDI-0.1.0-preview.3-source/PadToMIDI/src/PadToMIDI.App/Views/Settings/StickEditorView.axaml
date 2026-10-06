@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PadToMIDI.App.ViewModels.Settings"
+             x:Class="PadToMIDI.App.Views.Settings.StickEditorView" x:DataType="vm:StickEditorViewModel">
+  <StackPanel Spacing="20">
+    <TextBlock Classes="muted" Text="One direction per stick excursion. Return both axes to the neutral zone to rearm. Momentary octave actions last until neutral; persistent actions affect future presses." TextWrapping="Wrap" />
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="16">
+      <StackPanel Spacing="6">
+        <TextBlock Text="X axis source" />
+        <ComboBox ItemsSource="{Binding XAxes}" SelectedItem="{Binding XAxis}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="6">
+        <TextBlock Text="Y axis source" />
+        <ComboBox ItemsSource="{Binding YAxes}" SelectedItem="{Binding YAxis}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+      <StackPanel Grid.Row="1" Spacing="6">
+        <TextBlock Text="Action threshold" />
+        <NumericUpDown Minimum="0.01" Maximum="1" Increment="0.05" FormatString="0.###" Value="{Binding Threshold}" />
+      </StackPanel>
+      <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+        <TextBlock Text="Neutral dead zone (below threshold)" />
+        <NumericUpDown Minimum="0" Maximum="1" Increment="0.05" FormatString="0.###" Value="{Binding DeadZone}" />
+      </StackPanel>
+    </Grid>
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="16">
+      <StackPanel Spacing="6">
+        <TextBlock Text="Up" />
+        <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding Up}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="6">
+        <TextBlock Text="Down" />
+        <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding Down}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+      <StackPanel Grid.Row="1" Spacing="6">
+        <TextBlock Text="Left" />
+        <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding Left}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+      <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+        <TextBlock Text="Right" />
+        <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding Right}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+    </Grid>
+    <TextBlock Classes="muted" Text="If an axis is also assigned to continuous expression, both assignments remain active." TextWrapping="Wrap" />
+  </StackPanel>
+</UserControl>

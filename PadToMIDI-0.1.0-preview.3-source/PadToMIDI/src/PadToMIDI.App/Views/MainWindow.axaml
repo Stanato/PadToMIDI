@@ -1,0 +1,203 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PadToMIDI.App.ViewModels"
+        xmlns:core="using:PadToMIDI.Core.Input"
+        xmlns:midi="using:PadToMIDI.Core.Midi"
+        xmlns:controls="using:PadToMIDI.App.Controls"
+        x:Class="PadToMIDI.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="PadToMIDI"
+        Width="1180" Height="850" MinWidth="920" MinHeight="700"
+        Icon="/Assets/app.ico"
+        Background="#0E1728" FontFamily="Segoe UI">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="F1" Command="{Binding HelpCommand}" />
+    <KeyBinding Gesture="Ctrl+OemComma" Command="{Binding SettingsCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+P" Command="{Binding ProfilesCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+Escape" Command="{Binding PanicCommand}" />
+  </Window.KeyBindings>
+  <Grid RowDefinitions="Auto,*,Auto" Margin="30,24">
+    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,24">
+      <StackPanel Spacing="4">
+        <TextBlock Classes="eyebrow" Text="{Binding ApplicationName}" />
+        <TextBlock Text="Play your controller" FontSize="30" FontWeight="SemiBold" />
+        <TextBlock Classes="muted" Text="Scale notes through Windows MIDI Services." />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+        <Border Background="#203849" CornerRadius="8" Padding="14,9" MaxWidth="160">
+          <TextBlock Text="{Binding ScaleLabel}" Foreground="#65DFC0" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
+        </Border>
+        <Button x:Name="OpenSettings" Content="Settings" Command="{Binding SettingsCommand}" />
+        <Button x:Name="OpenProfiles" Content="Profiles" Command="{Binding ProfilesCommand}" IsVisible="{Binding Profiles, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <Button x:Name="OpenHelp" Content="Help" Command="{Binding HelpCommand}" />
+        <Button x:Name="GlobalPanic" Content="Panic" Command="{Binding PanicCommand}" Foreground="#FFADAD" />
+      </StackPanel>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="270,*">
+        <StackPanel Grid.Column="0" Spacing="16" Margin="0,0,20,0">
+          <Border Classes="card">
+            <StackPanel Spacing="12">
+              <TextBlock Classes="eyebrow" Text="CONTROLLER" />
+              <TextBlock Text="Choose your device" FontSize="18" FontWeight="SemiBold" />
+              <TextBlock Classes="muted" Text="{Binding DeviceCountLabel}" />
+              <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" HorizontalAlignment="Stretch"
+                        PlaceholderText="Connect a controller">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="core:GamepadDevice">
+                    <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              <TextBlock Text="{Binding ConnectionLabel}" Foreground="#65DFC0" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Classes="muted" Text="{Binding Message}" TextWrapping="Wrap" FontSize="13" />
+            </StackPanel>
+          </Border>
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <TextBlock Classes="eyebrow" Text="SCALE &amp; NOTE MAPPING" />
+              <TextBlock Text="{Binding Profiles.ActiveName, StringFormat='Profile: {0}'}" Foreground="#65DFC0" FontSize="12" IsVisible="{Binding Profiles, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              <TextBlock Text="{Binding Profiles.Status}" Classes.error="{Binding Profiles.HasError}" TextWrapping="Wrap" FontSize="11" IsVisible="{Binding Profiles, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              <TextBlock Text="{Binding ScaleLabel}" FontSize="20" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding PlayingModeLabel}" Foreground="#65DFC0" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding PlayingMessage}" Classes="error" TextWrapping="Wrap" FontSize="12" />
+              <TextBlock Classes="muted" Text="{Binding SettingsLabel}" TextWrapping="Wrap" FontSize="12" />
+              <ItemsControl ItemsSource="{Binding NoteMappings}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:MappingPreviewViewModel">
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2" Margin="0,4">
+                      <TextBlock Text="{Binding ControlLabel}" FontSize="12" />
+                      <TextBlock Grid.Column="1" Classes="muted" Text="{Binding ActionLabel}" FontSize="11" />
+                      <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding NoteLabel}" Foreground="#65DFC0" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Classes="muted" Text="Open Settings to edit assignments and response. Held notes retain their release pitches." TextWrapping="Wrap" FontSize="11" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Spacing="16">
+          <Border Classes="card" Padding="16" IsVisible="{Binding Midi, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Spacing="8">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="eyebrow" Text="MIDI OUTPUT" />
+                <TextBlock Grid.Column="1" Classes="muted" Text="{Binding Midi.Counts}" FontSize="12" />
+              </Grid>
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <ComboBox ItemsSource="{Binding Midi.Endpoints}" SelectedItem="{Binding Midi.SelectedEndpoint}" HorizontalAlignment="Stretch" PlaceholderText="Select an output endpoint">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="midi:MidiEndpoint"><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" /></DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="Channel" VerticalAlignment="Center" FontSize="12" />
+                  <NumericUpDown Minimum="1" Maximum="16" Increment="1" FormatString="0" Value="{Binding Midi.Channel}" Width="94" />
+                </StackPanel>
+              </Grid>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Refresh" Command="{Binding Midi.RefreshCommand}" />
+                <Button Content="Connect" Command="{Binding Midi.ConnectCommand}" />
+                <Button Content="Disconnect" Command="{Binding Midi.DisconnectCommand}" />
+                <Button Content="Panic" Command="{Binding Midi.PanicCommand}" />
+              </StackPanel>
+              <TextBlock Classes="muted" Text="{Binding Midi.Status}" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Classes="eyebrow" Text="LIVE INPUT &amp; EXPRESSION" />
+                <TextBlock Grid.Column="1" Classes="muted" Text="{Binding EventCountLabel}" FontSize="12" />
+              </Grid>
+              <Grid ColumnDefinitions="*,280" ColumnSpacing="16">
+                <controls:GamepadMonitor Values="{Binding Values}" Height="160" />
+                <StackPanel Grid.Column="1" Spacing="8">
+                <StackPanel Spacing="5">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Left trigger" FontSize="13" />
+                    <TextBlock Grid.Column="1" Classes="muted" Text="{Binding LeftTriggerLabel}" FontSize="13" />
+                  </Grid>
+                  <ProgressBar Minimum="0" Maximum="1" Value="{Binding Values.LeftTrigger}" Height="6" Foreground="#65DFC0" />
+                  <TextBlock Text="{Binding DPadPressureLabel}" Foreground="#65DFC0" FontSize="11" />
+                  <TextBlock Classes="muted" Text="Left stick" FontSize="11" />
+                  <TextBlock Text="{Binding LeftStickLabel}" FontFamily="Consolas" FontSize="12" />
+                </StackPanel>
+                <StackPanel Spacing="5">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Right trigger" FontSize="13" />
+                    <TextBlock Grid.Column="1" Classes="muted" Text="{Binding RightTriggerLabel}" FontSize="13" />
+                  </Grid>
+                  <ProgressBar Minimum="0" Maximum="1" Value="{Binding Values.RightTrigger}" Height="6" Foreground="#65DFC0" />
+                  <TextBlock Text="{Binding FacePressureLabel}" Foreground="#65DFC0" FontSize="11" />
+                  <TextBlock Classes="muted" Text="Right stick" FontSize="11" />
+                  <TextBlock Text="{Binding RightStickLabel}" FontFamily="Consolas" FontSize="12" />
+                </StackPanel>
+                </StackPanel>
+              </Grid>
+              <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Classes="muted" Text="Pitch bend" FontSize="12" />
+                  <TextBlock Text="{Binding PitchBendLabel}" Foreground="#65DFC0" FontSize="12" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Classes="muted" Text="Timbre" FontSize="12" />
+                  <TextBlock Text="{Binding TimbreLabel}" Foreground="#65DFC0" FontSize="12" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+          <Border Classes="card" Padding="16">
+            <TabControl>
+              <TabItem Header="MIDI events" FontSize="16">
+                <StackPanel Spacing="8" Margin="0,12,0,0">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding HeldNotesLabel}" Foreground="#65DFC0" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    <TextBlock Grid.Column="1" Classes="muted" Text="{Binding LastNoteLabel}" FontSize="12" />
+                  </Grid>
+                  <TextBlock Classes="muted" Text="{Binding MidiEventCountLabel}" FontSize="12" />
+                  <TextBlock IsVisible="{Binding !HasMidiActivity}" Classes="muted" Text="Press a mapped controller button to see note events here." TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding MidiActivity}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:MidiActivityViewModel">
+                        <TextBlock Text="{Binding Description}" FontFamily="Consolas" FontSize="12" Margin="0,1" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </TabItem>
+              <TabItem Header="Buttons" FontSize="16">
+              <StackPanel Spacing="14" Margin="0,12,0,0">
+              <TextBlock Classes="eyebrow" Text="NORMALIZED BUTTONS" />
+              <ItemsControl ItemsSource="{Binding Buttons}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ButtonViewModel">
+                    <Border Width="148" Padding="8,6" Margin="0,0,6,6" CornerRadius="6" Background="#101B2D">
+                      <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Ellipse Classes="inputIndicator" Classes.held="{Binding IsPressed}" Width="7" Height="7" Margin="0,0,7,0" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="11" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="{Binding StateLabel}" Foreground="#65DFC0" FontSize="9" VerticalAlignment="Center" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              </StackPanel>
+              </TabItem>
+            </TabControl>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,18,0,0">
+      <TextBlock Classes="muted" Text="Generic physical controls · No controller-specific labels" FontSize="12" />
+      <TextBlock Grid.Column="1" Classes="muted" Text="Windows MIDI Services · Preview API" FontSize="12" />
+    </Grid>
+  </Grid>
+</Window>

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PadToMIDI.App.ViewModels.Settings"
+             x:Class="PadToMIDI.App.Views.Settings.ResponseEditorView" x:DataType="vm:ResponseEditorViewModel">
+  <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="10">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="muted" Text="Dead zone (0–1, below 1)" FontSize="12" />
+      <NumericUpDown Minimum="0" Maximum="1" Increment="0.01" FormatString="0.###" Value="{Binding DeadZone}" />
+    </StackPanel>
+    <StackPanel Grid.Column="1" Spacing="4">
+      <TextBlock Classes="muted" Text="Response curve" FontSize="12" />
+      <ComboBox ItemsSource="{Binding Curves}" SelectedItem="{Binding Curve}" HorizontalAlignment="Stretch" />
+    </StackPanel>
+    <StackPanel Grid.Row="1" Spacing="4">
+      <TextBlock Classes="muted" Text="Sensitivity" FontSize="12" />
+      <NumericUpDown Minimum="0.01" Maximum="10" Increment="0.1" FormatString="0.###" Value="{Binding Sensitivity}" />
+    </StackPanel>
+    <CheckBox Grid.Row="1" Grid.Column="1" Content="Invert axis" IsChecked="{Binding Invert}" IsVisible="{Binding AllowInversion}" VerticalAlignment="Center" />
+    <StackPanel Grid.Row="2" Spacing="4">
+      <TextBlock Classes="muted" Text="Smoothing (milliseconds)" FontSize="12" />
+      <NumericUpDown Minimum="0" Maximum="5000" Increment="5" FormatString="0.##" Value="{Binding SmoothingMilliseconds}" />
+    </StackPanel>
+    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
+      <TextBlock Classes="muted" Text="Update rate (Hz; 0 = unlimited)" FontSize="12" />
+      <NumericUpDown Minimum="0" Maximum="1000" Increment="10" FormatString="0.##" Value="{Binding UpdateRateHz}" />
+    </StackPanel>
+  </Grid>
+</UserControl>

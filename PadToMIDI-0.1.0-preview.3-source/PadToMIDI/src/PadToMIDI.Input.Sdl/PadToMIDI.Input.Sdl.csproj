@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- SDL's binding exposes native pointers. Unsafe code stays in this backend. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../PadToMIDI.Core/PadToMIDI.Core.csproj" />
+    <PackageReference Include="ppy.SDL3-CS" />
+  </ItemGroup>
+</Project>

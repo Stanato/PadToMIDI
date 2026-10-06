@@ -1,0 +1,35 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="PadToMIDI.App.App"
+             RequestedThemeVariant="Dark">
+  <Application.Styles>
+    <FluentTheme />
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="#E8EDF6" />
+    </Style>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="#9AAAC1" />
+    </Style>
+    <Style Selector="TextBlock.eyebrow">
+      <Setter Property="Foreground" Value="#65DFC0" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="TextBlock.error">
+      <Setter Property="Foreground" Value="#FFADAD" />
+    </Style>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="#172237" />
+      <Setter Property="BorderBrush" Value="#2B3951" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="22" />
+    </Style>
+    <Style Selector="Ellipse.inputIndicator">
+      <Setter Property="Fill" Value="#43546D" />
+    </Style>
+    <Style Selector="Ellipse.inputIndicator.held">
+      <Setter Property="Fill" Value="#65DFC0" />
+    </Style>
+  </Application.Styles>
+</Application>

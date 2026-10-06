@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PadToMIDI.App.ViewModels.Settings" xmlns:views="using:PadToMIDI.App.Views.Settings"
+             x:Class="PadToMIDI.App.Views.Settings.AftertouchEditorView" x:DataType="vm:AftertouchEditorViewModel">
+  <Border Classes="card" Padding="16">
+    <StackPanel Spacing="10">
+      <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" />
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+        <CheckBox Content="Enabled" IsChecked="{Binding Enabled}" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Sources}" SelectedItem="{Binding Source}" HorizontalAlignment="Stretch" />
+      </Grid>
+      <StackPanel Spacing="4">
+        <TextBlock Classes="muted" Text="Minimum threshold after dead zone (0–1, below 1)" FontSize="12" />
+        <NumericUpDown Minimum="0" Maximum="1" Increment="0.01" FormatString="0.###" Value="{Binding MinimumThreshold}" />
+      </StackPanel>
+      <views:ResponseEditorView DataContext="{Binding Response}" />
+    </StackPanel>
+  </Border>
+</UserControl>

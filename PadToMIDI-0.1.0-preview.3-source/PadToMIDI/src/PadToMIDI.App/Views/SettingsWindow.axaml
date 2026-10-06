@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PadToMIDI.App.ViewModels.Settings" xmlns:music="using:PadToMIDI.Core.Musical"
+        xmlns:views="using:PadToMIDI.App.Views.Settings"
+        x:Class="PadToMIDI.App.Views.SettingsWindow" x:DataType="vm:ConfigurationEditorViewModel"
+        Title="Instrument settings" Width="1080" Height="850" MinWidth="920" MinHeight="650"
+        WindowStartupLocation="CenterOwner" Background="#0E1728" FontFamily="Segoe UI">
+  <Window.KeyBindings><KeyBinding Gesture="Ctrl+Shift+Escape" Command="{Binding PanicCommand}" /></Window.KeyBindings>
+  <Window.Resources>
+    <vm:EnumLabelConverter x:Key="EnumLabel" />
+  </Window.Resources>
+  <Window.Styles>
+    <Style Selector="ComboBox">
+      <Setter Property="ItemTemplate">
+        <DataTemplate x:CompileBindings="False">
+          <TextBlock Text="{Binding ., Converter={StaticResource EnumLabel}}" />
+        </DataTemplate>
+      </Setter>
+    </Style>
+  </Window.Styles>
+  <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+    <StackPanel Spacing="5" Margin="0,0,0,16">
+      <TextBlock Classes="eyebrow" Text="INSTRUMENT SETTINGS" />
+      <TextBlock Text="Make it your instrument" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Classes="muted" Text="Choose your scale, physical assignments, and expression response." />
+    </StackPanel>
+    <TabControl Grid.Row="1" x:Name="SettingsTabs">
+      <TabItem Header="Scale" FontSize="16">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Spacing="20" Margin="8,20,16,16">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="24">
+              <StackPanel Spacing="6">
+                <TextBlock Text="Root note" />
+                <ComboBox x:Name="RootSelector" ItemsSource="{Binding Roots}" SelectedItem="{Binding Root}" HorizontalAlignment="Stretch">
+                  <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:RootChoice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock Text="Scale" />
+                <ComboBox x:Name="ScaleSelector" ItemsSource="{Binding Scales}" SelectedItem="{Binding Scale}" HorizontalAlignment="Stretch">
+                  <ComboBox.ItemTemplate><DataTemplate x:DataType="music:ScaleDefinition"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="24">
+              <StackPanel Spacing="6">
+                <TextBlock Text="Base octave" />
+                <NumericUpDown x:Name="OctaveInput" Minimum="-1" Maximum="9" Increment="1" FormatString="0" Value="{Binding BaseOctave}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock Text="Fixed velocity" />
+                <NumericUpDown x:Name="VelocityInput" Minimum="1" Maximum="127" Increment="1" FormatString="0" Value="{Binding Velocity}" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="6">
+                <TextBlock Text="MIDI channel" />
+                <NumericUpDown x:Name="ChannelInput" Minimum="1" Maximum="16" Increment="1" FormatString="0" Value="{Binding Channel}" />
+              </StackPanel>
+            </Grid>
+            <Border Classes="card" Padding="18">
+              <StackPanel Spacing="10">
+                <TextBlock Text="Scale degrees follow your scale" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Classes="muted" Text="Degree 1 is the root. Degrees wrap using the selected scale's length: degree 8 is the next root in a seven-note scale, while pentatonic and chromatic scales wrap differently. C4 is MIDI 60." TextWrapping="Wrap" />
+                <TextBlock Classes="muted" Text="Melodic Minor uses its ascending intervals in either direction. Held notes keep their exact pitch and channel when you change settings." TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Buttons" FontSize="16">
+        <Grid RowDefinitions="Auto,*" Margin="8,16,0,0">
+          <TextBlock Classes="muted" Text="Assign scale degrees, fixed MIDI notes, held octave/semitone modifiers, or None. Analog controls are configured in Stick actions and Expression." TextWrapping="Wrap" Margin="0,0,16,12" />
+          <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding Buttons}" Margin="0,0,16,12">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ControlMappingEditorViewModel">
+                  <Border Background="#172237" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                    <Grid ColumnDefinitions="170,210,140,*" ColumnSpacing="16">
+                      <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}" HorizontalAlignment="Stretch" />
+                      <NumericUpDown Grid.Column="2" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Increment="1" FormatString="0"
+                                     Value="{Binding Value}" IsEnabled="{Binding ValueEnabled}" />
+                      <TextBlock Grid.Column="3" Classes="muted" Text="{Binding ValueHint}" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="12" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Stick actions" FontSize="16">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="8,20,16,16">
+          <views:StickEditorView DataContext="{Binding Stick}" />
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Expression" FontSize="16">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="8,16,16,16">
+          <StackPanel Spacing="16">
+            <TextBlock Classes="muted" Text="Triggers send polyphonic key pressure to every tone of each group's latest active note or chord. Stick center resets bend to 8192 and timbre to 64 immediately." TextWrapping="Wrap" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+              <views:AftertouchEditorView DataContext="{Binding DPadAftertouch}" />
+              <views:AftertouchEditorView Grid.Column="1" DataContext="{Binding FaceAftertouch}" />
+              <views:AxisExpressionEditorView Grid.Row="1" DataContext="{Binding PitchBend}" />
+              <views:AxisExpressionEditorView Grid.Row="1" Grid.Column="1" DataContext="{Binding Timbre}" />
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Chords" FontSize="16">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" Margin="8,20,16,16">
+          <StackPanel Spacing="18">
+            <CheckBox x:Name="ChordEnabled" Content="Chord mode enabled" IsChecked="{Binding Chords.Enabled}" />
+            <TextBlock Text="Toggle button (reserve it in Buttons; assign None there)" />
+            <ComboBox x:Name="ChordToggle" ItemsSource="{Binding Chords.Toggles}" SelectedItem="{Binding Chords.Toggle}">
+              <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:ToggleChoice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="Chord shape" />
+            <ComboBox x:Name="ChordShape" ItemsSource="{Binding Chords.Shapes}" SelectedItem="{Binding Chords.Shape}" />
+            <TextBlock Text="Harmony scale (used by ScaleTriad; same tonic as the selected scale)" TextWrapping="Wrap" />
+            <ComboBox x:Name="ChordHarmony" ItemsSource="{Binding Chords.Harmonies}" SelectedItem="{Binding Chords.Harmony}">
+              <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:HarmonyChoice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+            </ComboBox>
+            <Border Classes="card" Padding="18">
+              <StackPanel Spacing="12">
+                <TextBlock Text="Chords follow the chosen harmony" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Text="ScaleTriad stacks scale positions d, d+2, d+4 in a seven-note scale, preserving major, minor, diminished and augmented qualities. Melodic Minor uses its ascending form. These are chords from that scale, not automatic tonal-harmony rules." TextWrapping="Wrap" />
+                <TextBlock Text="For pentatonic, minor blues or chromatic scales, select a seven-note harmony scale or an explicit shape. A root outside the harmony scale is rejected. Fixed-note mappings require an explicit shape. Explicit shapes preserve that quality on every button and may contain notes outside the selected scale." TextWrapping="Wrap" />
+                <TextBlock Text="Octave and flat/sharp modifiers transpose every chord tone. Triggers apply polyphonic pressure to every tone of the latest active group chord. Shared MIDI pitches use the latest group's pressure. Held chords retain exact release pitches when you toggle or edit settings." TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+    <Grid Grid.Row="2" RowDefinitions="Auto,Auto" Margin="0,16,0,0">
+      <TextBlock x:Name="SettingsStatus" Text="{Binding Status}" Classes.error="{Binding HasError}" TextWrapping="Wrap" Margin="0,0,0,12" />
+      <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+        <Button x:Name="ResetSettings" Content="Reset draft to defaults" Command="{Binding ResetCommand}" />
+        <Button x:Name="SettingsPanic" Grid.Column="1" Content="Panic" Command="{Binding PanicCommand}" HorizontalAlignment="Right" IsVisible="{Binding PanicCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <Button x:Name="ApplySettings" Grid.Column="2" Content="Apply" Command="{Binding ApplyCommand}" />
+        <Button Grid.Column="3" Content="Close" Command="{Binding CloseCommand}" />
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>

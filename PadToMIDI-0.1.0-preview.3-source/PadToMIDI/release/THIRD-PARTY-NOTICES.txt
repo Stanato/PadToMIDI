@@ -1,0 +1,21 @@
+PadToMIDI Preview — third-party notices
+
+This package includes Avalonia (MIT), ppy.SDL3-CS (MIT), SDL3 (zlib),
+.NET/System.Text.Json (MIT), Windows MIDI Services preview API (MIT plus
+Microsoft's preview go-live terms), C#/WinRT (MIT), WinRT Windows SDK
+projections (Windows SDK license), SkiaSharp/Skia, HarfBuzzSharp/HarfBuzz,
+MicroCom.Runtime, and ANGLE. Original notices are preserved in licenses/.
+dependency-inventory.csv records NuGet dependency versions and license metadata.
+Some entries are build/test-only and are not included in the application payload.
+
+The installer is built with NSIS 3.11 (zlib/libpng); zlib compression is used.
+NSIS compiler distribution license: licenses/NSIS.txt.
+The exact .NET runtime license and third-party notices are also in licenses/.
+
+Windows MIDI Services preview APIs are used on Windows 11 25H2+ only.
+Preview DLL/PRI are bundled app-locally. No Microsoft tools or transport
+installers are redistributed. Preview terms and required future migration:
+https://github.com/microsoft/MIDI/releases/tag/inbox-preview-10
+
+PadToMIDI project terms are in LICENSE.txt.
+Third-party licenses and preview terms remain independently applicable.

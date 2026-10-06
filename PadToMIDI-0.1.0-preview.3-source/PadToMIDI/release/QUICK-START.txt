@@ -1,0 +1,40 @@
+PadToMIDI Preview
+===================
+Requires Windows 11 25H2 or newer, x64, and Windows MIDI Services.
+The .NET runtime is included; no SDK or separate .NET installation is needed.
+Preview Windows MIDI Services APIs and the tested SDL 3.5.0 development binary
+are included. Windows MIDI Services tools/transports are NOT included.
+Microsoft preview setup: https://github.com/microsoft/MIDI/releases/tag/inbox-preview-10
+
+1. Launch PadToMIDI.exe and connect your controller.
+2. Select a MIDI output and click Connect.
+3. For a DAW/synth, create a Windows MIDI Services loopback pair. Select its
+   sending side here, and enable the receiving side in the instrument app.
+4. Play the eight scale buttons. Press Help (F1) for the default controls.
+5. Apply edits in Settings. Create/Save in Profiles to keep your setup.
+
+Default C Major, octave 3, velocity 100, channel 1:
+D-pad Down/Up/Left/Right = C/D/E/F; face South/North/West/East = G/A/B/next C.
+Left stick Up/Down = momentary octave up/down.
+Left/Right = persistent octave down/up, once per excursion; center to rearm.
+Held Left/Right Bumper = flat/sharp on new notes.
+Start = toggle single notes / scale triads. C Major: C, Dm, Em, F, G, Am,
+Bdim, next-octave C. Settings > Chords chooses the toggle, harmony or shape.
+Pentatonic/blues/chromatic need a seven-note harmony scale or explicit shape.
+Fixed-note mappings need an explicit shape. Held chords retain exact releases.
+Modifiers transpose every tone; triggers express all tones of the selected chord.
+Left/Right Trigger = D-pad/face note polyphonic aftertouch.
+Right stick X = pitch bend; Y = CC74 timbre.
+
+F1: Help. Ctrl+,: Settings. Ctrl+Shift+P: Profiles. Ctrl+Shift+Esc: Panic.
+Shortcuts work while this application has focus. Input continues in the background.
+Your synth must support the relevant MIDI expression messages to hear them.
+
+Profiles: %LOCALAPPDATA%\PadToMIDI\Profiles
+Fatal startup logs: %LOCALAPPDATA%\PadToMIDI\Logs
+Uninstall keeps profiles. Export JSON before transferring a setup to another PC.
+
+Install newer versions using the per-user installer to update the preview APIs.
+Close the running app before upgrading or uninstalling. No automatic updater is included.
+This build is unsigned. THIRD-PARTY-NOTICES.txt and licenses/ contain dependency notices.
+The application's own distribution license has not been selected by its owner.
